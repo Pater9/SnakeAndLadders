@@ -1,7 +1,6 @@
 using FluentAssertions;
 using Moq;
 using SnakeAndLadders.Library;
-using SnakeAndLadders.Library.Domain;
 
 namespace SnakeAndLadders.Tests
 {
@@ -22,9 +21,7 @@ namespace SnakeAndLadders.Tests
         [Fact]
         public void A_player_token_can_be_added()
         {
-            var player = new Player();
-
-            _gameManager.AddPlayer(player);
+            var player = _gameManager.AddPlayer();
 
             _gameManager.Players.Single().Key.Should().Be(player);
         }
@@ -32,9 +29,7 @@ namespace SnakeAndLadders.Tests
         [Fact]
         public void A_newly_added_player_starts_from_starting_position()
         {
-            var player = new Player();
-
-            _gameManager.AddPlayer(player);
+            var player = _gameManager.AddPlayer();
 
             _gameManager.GetPlayerPosition(player).Should().Be(GameManager.STARTING_POSITION);
         }
@@ -42,8 +37,7 @@ namespace SnakeAndLadders.Tests
         [Fact]
         public void When_the_token_is_on_square_1_and_moved_3_spaces_ends_in_square_4()
         {
-            var player = new Player();
-            _gameManager.AddPlayer(player);
+            var player = _gameManager.AddPlayer();
 
             _gameManager.MovePlayer(player, 3);
 
@@ -54,8 +48,7 @@ namespace SnakeAndLadders.Tests
         [Fact]
         public void When_the_token_is_on_square_1_and_moved_3_spaces_and_then_4_ends_in_square_8()
         {
-            var player = new Player();
-            _gameManager.AddPlayer(player);
+            var player = _gameManager.AddPlayer();
 
             _gameManager.MovePlayer(player, 3);
             _gameManager.MovePlayer(player, 4);
@@ -71,8 +64,7 @@ namespace SnakeAndLadders.Tests
         [Fact]
         public void When_the_token_reaches_last_square_wins_the_game()
         {
-            var player = new Player();
-            _gameManager.AddPlayer(player);
+            var player = _gameManager.AddPlayer();
             _gameManager.MovePlayer(player, 99);
 
             var tokenReachedBoardEnd = _gameManager.PlayerHasWon(player);
@@ -83,8 +75,7 @@ namespace SnakeAndLadders.Tests
         [Fact]
         public void When_the_token_move_surpasses_board_end_movement_is_not_done()
         {
-            var player = new Player();
-            _gameManager.AddPlayer(player);
+            var player = _gameManager.AddPlayer();
             _gameManager.MovePlayer(player, 98);
             var position = _gameManager.GetPlayerPosition(player);
 
@@ -112,8 +103,7 @@ namespace SnakeAndLadders.Tests
                 .Returns(diceRoll)
                 .Verifiable();
 
-            var player = new Player();
-            _gameManager.AddPlayer(player);
+            var player = _gameManager.AddPlayer();
 
             var initialPosition = _gameManager.GetPlayerPosition(player);
 

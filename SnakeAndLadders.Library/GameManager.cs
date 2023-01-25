@@ -19,9 +19,13 @@ namespace SnakeAndLadders.Library
             _diceThrower = diceThrower;
         }
 
-        public void AddPlayer(Player player)
-        {
+        public Player AddPlayer(string playerName = "Jon")
+        { 
+            var player = new Player(playerName);
+
             Players.Add(player, STARTING_POSITION);
+
+            return player;
         }
 
         public int GetPlayerPosition(Player player) => Players[player];
@@ -38,10 +42,7 @@ namespace SnakeAndLadders.Library
             Players[player] += movingPositions;
         }
 
-        public bool PlayerHasWon(Player player)
-        {
-            return Players[player] == BoardLength;
-        }
+        public bool PlayerHasWon(Player player) => Players[player] == BoardLength;
 
         public int RollADie(Player player)
         {
