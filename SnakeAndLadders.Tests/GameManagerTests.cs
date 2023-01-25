@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Moq;
 using SnakeAndLadders.Library;
 using SnakeAndLadders.Library.Domain;
 
@@ -8,9 +9,12 @@ namespace SnakeAndLadders.Tests
     {
         private readonly GameManager _gameManager;
 
+        private readonly Mock<IDiceThrower> _diceThrower;
+
         public GameManagerTests()
         {
-            _gameManager = new GameManager();
+            _diceThrower = new Mock<IDiceThrower>();
+            _gameManager = new GameManager(_diceThrower.Object);
         }
 
         #region US1
@@ -92,5 +96,34 @@ namespace SnakeAndLadders.Tests
 
         #endregion
 
+        #region US3 - Moves Are Determined By Dice Rolls
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(4)]
+        [InlineData(5)]
+        [InlineData(6)]
+        public void When_the_player_rolls_a_x_token_should_move_x_squares(int diceRoll)
+        {
+            _diceThrower
+                .Setup(d => d.Roll())
+                .Returns(diceRoll)
+                .Verifiable();
+
+            var player = new Player();
+            _gameManager.AddPlayer(player);
+
+            var initialPosition = _gameManager.GetPlayerPosition(player);
+
+            _gameManager.RollADie(player);
+
+            var currentPosition = _gameManager.GetPlayerPosition(player);
+            currentPosition.Should().Be(initialPosition + diceRoll);
+            _diceThrower.Verify(c => c.Roll(), Times.Once);
+        }
+
+        #endregion
     }
 }
