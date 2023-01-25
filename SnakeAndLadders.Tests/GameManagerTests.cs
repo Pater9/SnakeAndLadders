@@ -61,5 +61,36 @@ namespace SnakeAndLadders.Tests
         }
 
         #endregion
+
+        #region US2 - Player Can Win the Game
+
+        [Fact]
+        public void When_the_token_reaches_last_square_wins_the_game()
+        {
+            var player = new Player();
+            _gameManager.AddPlayer(player);
+            _gameManager.MovePlayer(player, 99);
+
+            var tokenReachedBoardEnd = _gameManager.PlayerHasWon(player);
+
+            tokenReachedBoardEnd.Should().BeTrue();
+        }
+
+        [Fact]
+        public void When_the_token_move_surpasses_board_end_movement_is_not_done()
+        {
+            var player = new Player();
+            _gameManager.AddPlayer(player);
+            _gameManager.MovePlayer(player, 98);
+            var position = _gameManager.GetPlayerPosition(player);
+
+            _gameManager.MovePlayer(player, 6);
+
+            var finalPosition = _gameManager.GetPlayerPosition(player);
+            finalPosition.Should().Be(position);
+        }
+
+        #endregion
+
     }
 }

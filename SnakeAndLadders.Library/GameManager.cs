@@ -8,9 +8,12 @@ namespace SnakeAndLadders.Library
 
         public const int STARTING_POSITION = 1;
 
-        public GameManager()
+        public int BoardLength { get; }
+
+        public GameManager(int boardLength = 100)
         {
             Players = new Dictionary<Player, int>();
+            BoardLength = boardLength;
         }
 
         public void AddPlayer(Player player)
@@ -22,7 +25,19 @@ namespace SnakeAndLadders.Library
 
         public void MovePlayer(Player player, int movingPositions)
         {
+            var currentPosition = Players[player];
+
+            if (currentPosition + movingPositions > BoardLength) 
+            { 
+                return; 
+            }
+
             Players[player] += movingPositions;
+        }
+
+        public bool PlayerHasWon(Player player)
+        {
+            return Players[player] == BoardLength;
         }
     }
 }
